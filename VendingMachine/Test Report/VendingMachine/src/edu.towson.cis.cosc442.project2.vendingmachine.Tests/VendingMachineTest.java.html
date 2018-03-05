@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../jacoco-resources/report.gif" type="image/gif"/><title>VendingMachineTest.java</title><link rel="stylesheet" href="../../../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../../../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">VendingMachine (Mar 5, 2018 11:35:15 AM)</a> &gt; <a href="../../index.html" class="el_group">VendingMachine</a> &gt; <a href="../index.html" class="el_bundle">src</a> &gt; <a href="index.source.html" class="el_package">edu.towson.cis.cosc442.project2.vendingmachine.Tests</a> &gt; <span class="el_source">VendingMachineTest.java</span></div><h1>VendingMachineTest.java</h1><pre class="source lang-java linenums">package edu.towson.cis.cosc442.project2.vendingmachine.Tests;
+
+import edu.towson.cis.cosc442.project2.vendingmachine.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
+import org.junit.*;
+
+<span class="fc" id="L10">public class VendingMachineTest {</span>
+	VendingMachine vm;
+
+	@Before
+	public void setUp() throws Exception {
+		//start w only slot D full
+<span class="fc" id="L16">		vm = new VendingMachine();</span>
+<span class="fc" id="L17">		vm.addItem(new VendingMachineItem(&quot;cookie&quot;, 0.99), &quot;D&quot;);</span>
+<span class="fc" id="L18">	}</span>
+
+	@After
+	public void tearDown() throws Exception {
+<span class="fc" id="L22">	}</span>
+
+	/*
+	 * This will throw an exception, because we can't add an item to a full slot.
+	 */
+	@Test(expected = VendingMachineException.class)
+    public void addItemExceptionTest() {
+<span class="nc" id="L29">		vm.addItem(new VendingMachineItem(&quot;item1&quot;, 1.23), &quot;D&quot;);</span>
+<span class="nc" id="L30">    }</span>
+	
+	/*
+	 * Try to use the exception constructor.
+	 */
+	@Test(expected = VendingMachineException.class)
+	public void exceptionCreationTest() {
+<span class="fc" id="L37">		throw new VendingMachineException();</span>
+	}
+	
+	/*
+	 * Nothing bad should happen here; adding to an empty slot.
+	 */
+	@Test
+    public void addItemValidTest() {
+<span class="fc" id="L45">		vm.addItem(new VendingMachineItem(&quot;item2&quot;, 1.23), &quot;A&quot;);</span>
+<span class="fc" id="L46">    }</span>
+	
+	@Test
+    public void addItemBValidTest() {
+<span class="fc" id="L50">		vm.addItem(new VendingMachineItem(&quot;item2&quot;, 1.23), &quot;B&quot;);</span>
+<span class="fc" id="L51">    }</span>
+	
+	@Test
+    public void addItemCValidTest() {
+<span class="fc" id="L55">		vm.addItem(new VendingMachineItem(&quot;item2&quot;, 1.23), &quot;C&quot;);</span>
+<span class="fc" id="L56">    }</span>
+	
+	@Test(expected = VendingMachineException.class)
+    public void addItemInvalidTest() {
+<span class="nc" id="L60">		vm.addItem(new VendingMachineItem(&quot;item2&quot;, 1.23), &quot;K&quot;);</span>
+<span class="nc" id="L61">    }</span>
+	
+	/*
+	 * This will throw an exception if the item was successfully removed.
+	 */
+	@Test(expected = VendingMachineException.class)
+	public void removeItemTwiceTest( ) {
+<span class="fc" id="L68">		vm.removeItem(&quot;D&quot;);</span>
+<span class="nc" id="L69">		vm.removeItem(&quot;D&quot;);</span>
+<span class="nc" id="L70">	}</span>
+	
+	/*
+	 * Nothing bad should happen here; removing an item from a full slot.
+	 */
+	@Test
+    public void removeItemValidTest() {
+<span class="fc" id="L77">		vm.addItem(new VendingMachineItem(&quot;item2&quot;, 1.23), &quot;A&quot;);</span>
+<span class="fc" id="L78">		vm.removeItem(&quot;A&quot;);</span>
+<span class="fc" id="L79">    }</span>
+	
+	/*
+	 * Add some money
+	 */
+	@Test
+	public void insertMoneyTest() {
+<span class="fc" id="L86">		vm.insertMoney(1.23);</span>
+<span class="fc" id="L87">	}</span>
+	
+	/*
+	 * Trying to add negative moneys
+	 */
+	@Test(expected = VendingMachineException.class)
+	public void insertMoneyExceptionTest( ) {
+<span class="nc" id="L94">		vm.insertMoney(-99.99);</span>
+<span class="nc" id="L95">	}</span>
+	
+	/*
+	 * Check balance when balance is zero
+	 */
+	@Test
+	public void getBalanceZeroTest() {
+<span class="fc" id="L102">		assertEquals(0.0, vm.getBalance(), 0.0);</span>
+<span class="fc" id="L103">	}</span>
+	
+	/*
+	 * Check balance when balance is above zero (after adding money)
+	 */
+	@Test
+	public void getBalancePositiveTest() {
+<span class="fc" id="L110">		vm.insertMoney(1.23);</span>
+<span class="fc" id="L111">		assertEquals(1.23, vm.getBalance(), 0.0);</span>
+<span class="fc" id="L112">	}</span>
+	
+	/*
+	 * Purchase an item; slot should then be empty, balance should be 0.
+	 */
+	@Test
+	public void makePurchaseBalanceTest() {
+<span class="fc" id="L119">		vm.insertMoney(0.99);</span>
+<span class="fc" id="L120">		vm.makePurchase(&quot;D&quot;);</span>
+<span class="fc" id="L121">		assertEquals(0.0, vm.getBalance(), 0.0);</span>
+<span class="fc" id="L122">	}</span>
+	
+	/*
+	 * Purchase an item from an empty slot
+	 */
+	@Test
+	public void makePurchaseEmptyExceptionTest() {
+<span class="fc" id="L129">		vm.insertMoney(2.00);</span>
+<span class="fc" id="L130">		assertEquals(false, vm.makePurchase(&quot;A&quot;));</span>
+<span class="fc" id="L131">	}</span>
+	
+	/*
+	 * Check balance after buying something (balance still positive)
+	 */
+	@Test
+	public void getBalanceAfterRemovalTest() {
+<span class="fc" id="L138">		vm.insertMoney(1.23);</span>
+<span class="fc" id="L139">		vm.makePurchase(&quot;D&quot;);</span>
+<span class="fc" id="L140">		assertEquals(0.24, vm.getBalance(), 0.0);</span>
+<span class="fc" id="L141">	}</span>
+	
+	/*
+	 * Try to get your change after buying something and still having a positive balance
+	 */
+	@Test
+	public void returnChangePositiveTest() {
+<span class="fc" id="L148">		vm.insertMoney(1.99);</span>
+<span class="fc" id="L149">		vm.makePurchase(&quot;D&quot;);</span>
+<span class="fc" id="L150">		assertEquals(1.00, vm.returnChange(), 0.0);</span>
+<span class="fc" id="L151">	}</span>
+	
+	/*
+	 * Try to get your change when you spent all your money in the machine
+	 */
+	@Test
+	public void returnChangeZeroBalanceTest() {
+<span class="fc" id="L158">		vm.insertMoney(0.99);</span>
+<span class="fc" id="L159">		vm.makePurchase(&quot;D&quot;);</span>
+<span class="fc" id="L160">		assertEquals(0.0, vm.returnChange(), 0.0);</span>
+<span class="fc" id="L161">	}</span>
+	
+	/*
+	 * Try to get your change when you never bought anything or inserted any money
+	 */
+	@Test
+	public void returnChangeEmptyTest() {
+<span class="fc" id="L168">		assertEquals(0.0, vm.returnChange(), 0.0);</span>
+<span class="fc" id="L169">	}</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.7.9.201702052155</span>VendingMachine (Mar 5, 2018 11:35:15 AM)</div></body></html>
